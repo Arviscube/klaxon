@@ -20,15 +20,12 @@ def reconstruct_signal_note(frequencie,amplitude, phase, length_signal=1000, sam
         window_signal += ampl * np.sin(2 * np.pi * freq * window_time + phase)
     
     reconstructed_signal[0: 1 * length_signal] = window_signal
-
-    #reconstructed_signal = normalize_local(reconstructed_signal,50)  
+  
     reconstructed_signal /= np.max(np.abs(reconstructed_signal))
     return reconstructed_signal
     
 
 def reconstruct_audio_segment(notes, data, length_signal = 1000, sample_rate=44100):
-    # signal_rec = reconstruct_signal_note(notes['frequency'][0],notes['amplitude'][0],notes['phase'][0], length_signal, sample_rate)
-    
     all_signals = []
     for i in range(len(data['note'])):
         if(data['durations'][i]!=0):
@@ -60,44 +57,6 @@ def reconstruct_audio_segment(notes, data, length_signal = 1000, sample_rate=441
 def save_audio_to_mp3(audio_segment, file_path):
     audio_segment.export(file_path, format="mp3")
 
-
-
-
-def normalize_local(signal, window_size):
-    """
-    Normalise localement un signal en divisant chaque fenêtre par sa norme (L2).
-    
-    Parameters:
-    - signal: numpy array, le signal à normaliser
-    - window_size: int, la taille de la fenêtre pour la normalisation
-    
-    Returns:
-    - normalized_signal: numpy array, le signal normalisé
-    """
-    # Nombre total de fenêtres
-    num_windows = len(signal) // window_size
-    
-    # Normaliser chaque fenêtre
-    normalized_windows = []
-    for i in range(num_windows):
-        window = signal[i * window_size: (i + 1) * window_size]
-        normalized_window = window / np.max(np.abs(window))
-        # norm_factor = np.linalg.norm(window)
-        # if norm_factor != 0:
-        #     normalized_window = window / norm_factor
-        # else:
-        #     normalized_window = window
-        normalized_windows.append(normalized_window)
-    
-    # Concaténer les fenêtres normalisées
-    normalized_signal = np.concatenate(normalized_windows)
-    
-    return normalized_signal
-
-def generate_phases(num_phases, rotations=3):
-    base_phase = np.linspace(0, 2 * np.pi, num_phases, endpoint=False)
-    full_phases = np.tile(base_phase, rotations)
-    return full_phases[:num_phases]
 
 
 if __name__ == "__main__":
