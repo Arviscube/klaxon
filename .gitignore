@@ -163,3 +163,7 @@ cython_debug/
 
 old/
 testNotes.mp3
+.pio
+.vscode
+
+
